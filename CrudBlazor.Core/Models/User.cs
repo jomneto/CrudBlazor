@@ -4,6 +4,7 @@
     {
         public virtual ulong userId { get; set; }
         public virtual string userEmail { get; set; } = string.Empty;
+        public virtual string userName { get; set; } = string.Empty;
         public virtual string userPasswordHash { get; set; } = string.Empty;
         public virtual bool userFlagDeleted { get; set; } = false;
     }

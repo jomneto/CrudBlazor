@@ -9,7 +9,7 @@ namespace CrudBlazor.Api.ORM.Maps
         {
             Table("customer_phone");
 
-            Id(x => x.customerId);
+            Id(x => x.customerId).GeneratedBy.Identity();
 
             Map(x => x.customerPhoneNumber);
             Map(x => x.customerPhoneFlagDeleted);

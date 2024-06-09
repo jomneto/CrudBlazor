@@ -4,7 +4,7 @@
     {
         public virtual ulong customerId { get; set; }
         public virtual string customerName { get; set; } = string.Empty;
-        public virtual DateOnly? customerBirthDate { get; set; }
+        public virtual DateTime? customerBirthDate { get; set; }
         public virtual bool customerFlagDeleted { get; set; } = false;
     }
 }

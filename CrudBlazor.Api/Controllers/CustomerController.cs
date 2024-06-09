@@ -1,18 +1,17 @@
 ﻿using CrudBlazor.Api.ORM.DAO;
 using CrudBlazor.Core.CRUD;
 using CrudBlazor.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrudBlazor.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-
-        UserDAO dao;
-
-        public UserController(UserDAO dao) => this.dao = dao;
+        CustomerDAO dao;
+        public CustomerController(CustomerDAO dao) => this.dao = dao;
 
         [HttpGet("{id:long}")]
         public ActionResult FindById(ulong id)
@@ -45,7 +44,7 @@ namespace CrudBlazor.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveOrUpdate(User obj)
+        public ActionResult SaveOrUpdate(Customer obj)
         {
             try
             {

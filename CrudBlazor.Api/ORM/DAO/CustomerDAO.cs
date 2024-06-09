@@ -4,41 +4,41 @@ using CrudBlazor.Core.Models;
 
 namespace CrudBlazor.Api.ORM.DAO
 {
-    public class UserDAO : ICrud<User, string>
+    public class CustomerDAO : ICrud<Customer, string>
     {
-        private NHibernate.ISession session { get; set; } = null!;
-        public UserDAO(NHibernate.ISession session) => this.session = session;
+        NHibernate.ISession session;
+        public CustomerDAO(NHibernate.ISession session) => this.session = session;
 
-        public User? FindByID(ulong id)
+        public Customer? FindByID(ulong id)
         {
-            return session.Get<User>(id);
+            return session.Get<Customer>(id);
         }
-        public PaginateResponse<User> FindAll(PaginateRequest<string> paginateRequest)
+
+        public PaginateResponse<Customer> FindAll(PaginateRequest<string> paginateRequest)
         {
-            var query = session.Query<User>()
-                .Where(x => !x.userFlagDeleted);
+            var query = session.Query<Customer>()
+                .Where(x => !x.customerFlagDeleted);
 
             if (!string.IsNullOrEmpty(paginateRequest.Filter))
-            {
-                query = query.Where(x => x.userEmail.Contains(paginateRequest.Filter.ToLike()) || x.userName.Contains(paginateRequest.Filter.ToLike()));
-            }
+                query = query.Where(x => x.customerName.Contains(paginateRequest.Filter.ToLike()));
 
-            query = query.OrderBy(x => x.userName);
+            query = query.OrderBy(x => x.customerName);
 
-            return query.ToPaginateResponse<User, string>(paginateRequest);
+            return query.ToPaginateResponse<Customer, string>(paginateRequest);
         }
 
-        public User? SaveOrUpdate(User obj)
+        public Customer? SaveOrUpdate(Customer obj)
         {
             var t = session.BeginTransaction();
+
             try
             {
-                var result = session.Get<User>(obj.userId);
+                var result = session.Get<Customer>(obj.customerId);
                 if (result != null)
                 {
-                    result.userEmail = obj.userEmail;
-                    result.userFlagDeleted = obj.userFlagDeleted;
-                    result.userPasswordHash = obj.userPasswordHash;
+                    result.customerName = obj.customerName;
+                    result.customerBirthDate = obj.customerBirthDate;
+                    result.customerFlagDeleted = obj.customerFlagDeleted;
                     session.Update(result);
                     t.Commit();
                     return result;
@@ -49,32 +49,40 @@ namespace CrudBlazor.Api.ORM.DAO
                     t.Commit();
                     return obj;
                 }
+
             }
             catch (Exception)
             {
                 t.Rollback();
                 throw;
             }
-            finally { t.Dispose(); }
+            finally
+            {
+                t.Dispose();
+            }
+
 
         }
 
         public bool Delete(ulong id)
         {
             var t = session.BeginTransaction();
+
             try
             {
-                var obj = session.Get<User>(id);
+                var obj = session.Get<Customer>(id);
                 if (obj != null)
                 {
-                    obj.userFlagDeleted = true;
+                    obj.customerFlagDeleted = true;
                     session.Update(obj);
                     t.Commit();
                     return true;
-                } else
-                {
+                }
+                else
+                { 
                     return false;
                 }
+
             }
             catch (Exception)
             {
@@ -84,6 +92,5 @@ namespace CrudBlazor.Api.ORM.DAO
             finally { t.Dispose(); }
 
         }
-
     }
 }

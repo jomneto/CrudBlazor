@@ -9,7 +9,7 @@ namespace CrudBlazor.Api.ORM.Maps
         {
             Table("customer");
 
-            Id(x => x.customerId);
+            Id(x => x.customerId).GeneratedBy.Identity();
 
             Map(x => x.customerName);
             Map(x => x.customerBirthDate);

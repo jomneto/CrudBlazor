@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace CrudBlazor.Api.ORM
 {
-    public static class NHibernateExtensions
+    public static class ORMExtensions
     {
         public static IServiceCollection AddNHibernate ( this IServiceCollection services, string connectionString)
         {
@@ -17,8 +17,8 @@ namespace CrudBlazor.Api.ORM
             {
                 c.Dialect<MySQLDialect>();
                 c.ConnectionString = connectionString;
-                c.LogFormattedSql = true;
-                c.LogSqlInConsole = true;
+                c.LogFormattedSql = false;
+                c.LogSqlInConsole = false;
             });
 
             configuration.AddMappingsFromAssembly(Assembly.GetExecutingAssembly());
@@ -29,6 +29,7 @@ namespace CrudBlazor.Api.ORM
             
             // Add DAO Services
             services.AddScoped<UserDAO>();
+            services.AddScoped<CustomerDAO>();
 
             return services;
         }
@@ -37,17 +38,28 @@ namespace CrudBlazor.Api.ORM
         {
             var result = new PaginateResponse<TResult>
             {
-                PageSize = request.PageSize,
-                PageNumber = request.PageNumber,
+                PageSize = request.PageSize <= 0 ? 25 : request.PageSize,
+                PageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber,
                 TotalRecords = query.Count()
             };
 
             // Pega o total de páginas
             result.TotalPages = (int)Math.Ceiling(result.TotalRecords / (decimal)result.PageSize);
 
-            // Pega os dados fazendo a paginação
-            result.Data = query.Take(result.PageSize).Skip(request.Skip).ToList() ?? [];
+            // Verifica se a pagina é maior do que a última página
+            result.PageNumber = result.PageNumber > result.TotalPages ? result.TotalPages : result.PageNumber;
 
+            // Pega os dados fazendo a paginação
+            result.Data = query.Take(result.PageSize).Skip(result.Skip).ToList() ?? [];
+
+            return result;
+        }
+
+        public static string ToLike(this string input)
+        {
+            string result = string.Empty;
+            if (!string.IsNullOrEmpty(input))
+                result = input.Trim().Replace(" ", "%");
             return result;
         }
 
