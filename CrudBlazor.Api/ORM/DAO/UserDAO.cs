@@ -5,10 +5,9 @@ using CrudBlazor.Core.Models;
 
 namespace CrudBlazor.Api.ORM.DAO
 {
-    public class UserDAO : ICrud<User, UserPO, string>
+    public class UserDAO(NHibernate.ISession _session) : ICrud<User, UserPO, string>
     {
-        private NHibernate.ISession session { get; set; } = null!;
-        public UserDAO(NHibernate.ISession session) => this.session = session;
+        readonly NHibernate.ISession session = _session;
 
         public User? FindByID(ulong id)
         {

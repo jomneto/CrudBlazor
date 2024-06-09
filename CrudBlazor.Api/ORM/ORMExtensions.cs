@@ -3,9 +3,6 @@ using CrudBlazor.Core.CRUD;
 using FluentNHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
-using NHibernate.Id;
-using System.Drawing.Printing;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace CrudBlazor.Api.ORM

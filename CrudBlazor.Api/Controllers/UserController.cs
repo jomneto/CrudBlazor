@@ -7,12 +7,10 @@ namespace CrudBlazor.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(UserDAO _dao) : ControllerBase
     {
 
-        UserDAO dao;
-
-        public UserController(UserDAO dao) => this.dao = dao;
+        readonly UserDAO dao = _dao;
 
         [HttpGet("{id:long}")]
         public ActionResult FindById(ulong id)

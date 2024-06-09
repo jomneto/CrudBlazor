@@ -3,7 +3,7 @@ using FluentNHibernate.Mapping;
 
 namespace CrudBlazor.Api.ORM.Maps
 {
-    public class UserMap: ClassMap<UserPO>
+    public class UserMap : ClassMap<UserPO>
     {
         public UserMap()
         {
@@ -13,7 +13,7 @@ namespace CrudBlazor.Api.ORM.Maps
 
             Map(x => x.userEmail);
             Map(x => x.userName);
-            Map(x => x.userPasswordHash);    
+            Map(x => x.userPasswordHash);
             Map(x => x.userFlagDeleted);
         }
 

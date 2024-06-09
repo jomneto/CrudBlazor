@@ -1,17 +1,15 @@
 ﻿using CrudBlazor.Api.ORM.DAO;
 using CrudBlazor.Core.CRUD;
 using CrudBlazor.Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrudBlazor.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController(CustomerDAO _dao) : ControllerBase
     {
-        CustomerDAO dao;
-        public CustomerController(CustomerDAO dao) => this.dao = dao;
+        readonly CustomerDAO dao = _dao;
 
         [HttpGet("{id:long}")]
         public ActionResult FindById(ulong id)

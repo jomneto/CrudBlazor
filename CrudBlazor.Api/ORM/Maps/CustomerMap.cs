@@ -3,9 +3,9 @@ using FluentNHibernate.Mapping;
 
 namespace CrudBlazor.Api.ORM.Maps
 {
-    public class CustomerMap: ClassMap<CustomerPO>
+    public class CustomerMap : ClassMap<CustomerPO>
     {
-        public CustomerMap() 
+        public CustomerMap()
         {
             Table("customer");
 
