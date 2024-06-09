@@ -1,9 +1,9 @@
-﻿using CrudBlazor.Core.Models;
+﻿using CrudBlazor.Api.ORM.PO;
 using FluentNHibernate.Mapping;
 
 namespace CrudBlazor.Api.ORM.Maps
 {
-    public class CustomerMap: ClassMap<Customer>
+    public class CustomerMap: ClassMap<CustomerPO>
     {
         public CustomerMap() 
         {

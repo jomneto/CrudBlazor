@@ -2,11 +2,11 @@
 
 namespace CrudBlazor.Core.Interfaces
 {
-    public interface ICrud<TObject, TFilter>
+    public interface ICrud<T, TPO, TFilter>
     {
-        TObject? FindByID(ulong id);
-        PaginateResponse<TObject> FindAll(PaginateRequest<TFilter> paginateRequest);
-        TObject? SaveOrUpdate(TObject obj);
+        T? FindByID(ulong id);
+        PaginateResponse<T, TPO> FindAll(PaginateRequest<TFilter> paginateRequest);
+        T? SaveOrUpdate(T obj);
         bool Delete(ulong id);
 
     }

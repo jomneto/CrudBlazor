@@ -1,10 +1,16 @@
-﻿namespace CrudBlazor.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CrudBlazor.Core.Models
 {
     public class Customer
     {
-        public virtual ulong customerId { get; set; }
-        public virtual string customerName { get; set; } = string.Empty;
-        public virtual DateTime? customerBirthDate { get; set; }
-        public virtual bool customerFlagDeleted { get; set; } = false;
+        public virtual ulong Id { get; set; }
+
+        [Required(AllowEmptyStrings =false, ErrorMessage ="O nome não pode ficar em branco")]
+        public virtual string Name { get; set; } = string.Empty;
+
+        public string? BirthDate { get; set; }
+
+        public virtual bool IsDeleted { get; set; } = false;
     }
 }

@@ -1,22 +1,26 @@
-﻿using CrudBlazor.Core.CRUD;
+﻿using CrudBlazor.Api.ORM.PO;
+using CrudBlazor.Core.CRUD;
+using CrudBlazor.Core.Extensions;
 using CrudBlazor.Core.Interfaces;
 using CrudBlazor.Core.Models;
 
 namespace CrudBlazor.Api.ORM.DAO
 {
-    public class CustomerDAO : ICrud<Customer, string>
+    public class CustomerDAO : ICrud<Customer, CustomerPO, string>
     {
         NHibernate.ISession session;
         public CustomerDAO(NHibernate.ISession session) => this.session = session;
 
         public Customer? FindByID(ulong id)
         {
-            return session.Get<Customer>(id);
+            return (Customer?)session.Get<CustomerPO>(id);
         }
 
-        public PaginateResponse<Customer> FindAll(PaginateRequest<string> paginateRequest)
+        public PaginateResponse<Customer, CustomerPO> FindAll(PaginateRequest<string> paginateRequest)
         {
-            var query = session.Query<Customer>()
+
+            // Cria a query
+            var query = session.Query<CustomerPO>()
                 .Where(x => !x.customerFlagDeleted);
 
             if (!string.IsNullOrEmpty(paginateRequest.Filter))
@@ -24,7 +28,12 @@ namespace CrudBlazor.Api.ORM.DAO
 
             query = query.OrderBy(x => x.customerName);
 
-            return query.ToPaginateResponse<Customer, string>(paginateRequest);
+
+            // Cria o PaginateResponse com base na query criada
+            var result = query.ToPaginateResponse<Customer, CustomerPO, string>(paginateRequest);
+            result.FeedData(query, x => result.Data.Add((Customer)x!));
+
+            return result;
         }
 
         public Customer? SaveOrUpdate(Customer obj)
@@ -33,15 +42,15 @@ namespace CrudBlazor.Api.ORM.DAO
 
             try
             {
-                var result = session.Get<Customer>(obj.customerId);
+                var result = session.Get<CustomerPO>(obj.Id);
                 if (result != null)
                 {
-                    result.customerName = obj.customerName;
-                    result.customerBirthDate = obj.customerBirthDate;
-                    result.customerFlagDeleted = obj.customerFlagDeleted;
+                    result.customerName = obj.Name;
+                    result.customerBirthDate = obj.BirthDate.StringToDate();
+                    result.customerFlagDeleted = obj.IsDeleted;
                     session.Update(result);
                     t.Commit();
-                    return result;
+                    return (Customer?)result;
                 }
                 else
                 {
@@ -70,7 +79,7 @@ namespace CrudBlazor.Api.ORM.DAO
 
             try
             {
-                var obj = session.Get<Customer>(id);
+                var obj = session.Get<CustomerPO>(id);
                 if (obj != null)
                 {
                     obj.customerFlagDeleted = true;
@@ -79,7 +88,7 @@ namespace CrudBlazor.Api.ORM.DAO
                     return true;
                 }
                 else
-                { 
+                {
                     return false;
                 }
 

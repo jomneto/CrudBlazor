@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = Configuration.ConnectionString;
 builder.Services.AddNHibernate(connectionString);
 
+builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

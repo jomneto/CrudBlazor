@@ -3,13 +3,16 @@ using CrudBlazor.Core.CRUD;
 using FluentNHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
+using NHibernate.Id;
+using System.Drawing.Printing;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace CrudBlazor.Api.ORM
 {
     public static class ORMExtensions
     {
-        public static IServiceCollection AddNHibernate ( this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddNHibernate(this IServiceCollection services, string connectionString)
         {
             var configuration = new Configuration();
 
@@ -26,7 +29,7 @@ namespace CrudBlazor.Api.ORM
             var sessionFactory = configuration.BuildSessionFactory();
             services.AddSingleton(sessionFactory);
             services.AddScoped(factory => sessionFactory.OpenSession());
-            
+
             // Add DAO Services
             services.AddScoped<UserDAO>();
             services.AddScoped<CustomerDAO>();
@@ -34,9 +37,9 @@ namespace CrudBlazor.Api.ORM
             return services;
         }
 
-        public static PaginateResponse<TResult> ToPaginateResponse<TResult, TRequest>(this IQueryable<TResult> query, PaginateRequest<TRequest> request)
+        public static PaginateResponse<T, TPO> ToPaginateResponse<T, TPO, TFilter>(this IQueryable<TPO> query, PaginateRequest<TFilter> request)
         {
-            var result = new PaginateResponse<TResult>
+            var result = new PaginateResponse<T, TPO>
             {
                 PageSize = request.PageSize <= 0 ? 25 : request.PageSize,
                 PageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber,
@@ -48,9 +51,6 @@ namespace CrudBlazor.Api.ORM
 
             // Verifica se a pagina é maior do que a última página
             result.PageNumber = result.PageNumber > result.TotalPages ? result.TotalPages : result.PageNumber;
-
-            // Pega os dados fazendo a paginação
-            result.Data = query.Take(result.PageSize).Skip(result.Skip).ToList() ?? [];
 
             return result;
         }
