@@ -1,17 +1,19 @@
 using CrudBlazor.Api.ORM;
+using CrudBlazor.Api.Security;
 using CrudBlazor.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = Configuration.ConnectionString;
-builder.Services.AddNHibernate(connectionString);
+builder.Services.AddNHibernate(Configuration.ConnectionString);
+builder.Services.AddSecurity(Configuration.JwtPrivateKey);
 
 builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

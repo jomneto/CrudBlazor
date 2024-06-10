@@ -19,7 +19,7 @@ namespace CrudBlazor.Api.Controllers
             {
                 var result = dao.FindByID(id);
                 if (result != null)
-                    return Ok(dao.FindByID(id));
+                    return Ok(result);
                 else
                     return NotFound();
             }

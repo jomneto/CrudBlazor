@@ -2,6 +2,7 @@
 using CrudBlazor.Core.CRUD;
 using CrudBlazor.Core.Interfaces;
 using CrudBlazor.Core.Models;
+using DefineLIBCore.Library;
 
 namespace CrudBlazor.Api.ORM.DAO
 {
@@ -41,6 +42,7 @@ namespace CrudBlazor.Api.ORM.DAO
                     result.userName = obj.Name;
                     result.userFlagDeleted = obj.IsDeleted;
                     result.userPasswordHash = obj.PasswordHash;
+                    result.userRoles = obj.Roles;
                     session.Update(result);
                     t.Commit();
                     return (User?)result;
